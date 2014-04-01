@@ -20,7 +20,7 @@ func Traverse(node *Node, callback func(key string, values []string)) {
 }
 
 func traverse(node *Node, key string, callback func(key string, values []string)) {
-	if node != nil {
+	if node != nil && len(node.Values) > 0 {
 		callback(key, node.Values)
 	}
 
