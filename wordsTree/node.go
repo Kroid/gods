@@ -5,10 +5,10 @@ const REMOVE_ALL_VALUES = "delete_all_values:true"
 
 type Node struct {
 	Children map[rune]*Node
-	Values   []interface{}
+	Values   []string
 }
 
-func (n *Node) Find(key string) (interface{}, bool) {
+func (n *Node) Find(key string) ([]string, bool) {
 	node := n
 	found := false
 
@@ -21,12 +21,12 @@ func (n *Node) Find(key string) (interface{}, bool) {
 	return node.Values, true
 }
 
-func (n *Node) Insert(key string, value interface{}) bool {
+func (n *Node) Insert(key string, value string) bool {
 	node := n
 
 	for _, char := range key {
 		if temp, found := node.Children[char]; !found {
-			node.Children[char] = &Node{make(map[rune]*Node), make([]interface{}, 0, capacity)}
+			node.Children[char] = &Node{make(map[rune]*Node), make([]string, 0, capacity)}
 			node = node.Children[char]
 		} else {
 			node = temp
@@ -43,7 +43,7 @@ func (n *Node) Insert(key string, value interface{}) bool {
 	return true
 }
 
-func (n *Node) Update(key string, oldValue, newValue interface{}) bool {
+func (n *Node) Update(key string, oldValue, newValue string) bool {
 	node := n
 	var found bool
 
@@ -63,7 +63,7 @@ func (n *Node) Update(key string, oldValue, newValue interface{}) bool {
 	return false
 }
 
-func (n *Node) Remove(key string, value interface{}) bool {
+func (n *Node) Remove(key string, value string) bool {
 	var r rune
 	var found bool
 	var last *Node
@@ -83,7 +83,7 @@ func (n *Node) Remove(key string, value interface{}) bool {
 		if len(last.Children) == 0 {
 			delete(node.Children, r)
 		} else {
-			last.Values = make([]interface{}, 0, capacity)
+			last.Values = make([]string, 0, capacity)
 		}
 		return true
 	} else {
