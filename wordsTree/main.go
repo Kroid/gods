@@ -2,6 +2,7 @@ package wordsTree
 
 import (
 	"io"
+	"strconv"
 )
 
 func Create() *Node {
@@ -26,21 +27,31 @@ func traverse(node *Node, key string, callback func(key string, values []interfa
 	}
 }
 
-func Serialize(node *Node, writer *io.Writer) ([]byte, error) {
-	cb := func(writer *io.Writer) func(key string, values []interface{}) {
+func Serialize(node *Node, writer io.Writer) {
+	cb := func(writer io.Writer) func(key string, values []interface{}) {
 		return func(key string, values []interface{}) {
-			k := toBytes(key)
+			writer.Write(toBytes(key))
+			writer.Write([]byte{':'})
 			for _, value := range values {
-				v := toBytes(value)
+				writer.Write(toBytes(value))
+				writer.Write([]byte{'|'})
 			}
-			// write to writer
+			writer.Write([]byte{'\n'})
 		}
 	}
 	Traverse(node, cb(writer))
-	panic("dev")
+	//panic("dev")
 }
 
 func toBytes(x interface{}) []byte {
+	switch x.(type){
+	case bool:
+		return []byte(strconv.FormatBool(x.(bool)))
+	case int:
+		return []byte(strconv.FormatInt(int64(x.(int)), 10))
+	case string:
+		return []byte(x.(string))
+	}
 	panic("dev")
 }
 
